@@ -22,47 +22,52 @@ var holdswins = document.getElementById("wins-text");
 var holdslosses = document.getElementById("loss-text");
 
 //computer chooses what letter will win. 
-let computerGuess = computerchoices[Math.floor(Math.random() * computerchoices.length)];
+let computerGuess;
 
 
 
 //When the user presses a key.
 document.onkeyup = function(event) {
 
-    //defines userGuess as the onkeyup event.
-    userGuess.push(event.key);
+    var key = event.key.toLowerCase();
 
-    //logic for wins and losses.
-    if ((userGuess.includes(computerGuess))){
-        wins++;
-        guessleft=9;
-        function reset () {
-            //empty array
-            userGuess.length = 0;
-            //computer picks new letter
-            let computerGuess = computerchoices[Math.floor(Math.random() * computerchoices.length)];
+    console.log(key)
+
+    if (computerchoices.includes(key) && !userGuess.includes(key)) {
+         //defines userGuess as the onkeyup event.
+        userGuess.push(event.key);
+
+        //logic for wins and losses.
+        if (key === computerGuess){
+            wins++; 
+            reset ();
+        } else {
+            guessleft--;
         }
-        reset ();
-    } else {
-        guessleft--;
-    }
-
-    
-    if ((guessleft===0)){
-        losses++;
-        guessleft=7;
-        function reset () {
-            //empty array
-            userGuess.length = 0;
-            //computer picks new letter
-            let computerGuess = computerchoices[Math.floor(Math.random() * computerchoices.length)];
+        if ((guessleft===0)){
+            losses++;
+            reset ();
         }
-        reset ();
+        renderGame();
     }
+}
 
-//controlling the stats displayed on the page.
+function reset () {
+    guessleft=9;
+    //empty array
+    userGuess = [];
+    //computer picks new letter
+    computerGuess = computerchoices[Math.floor(Math.random() * computerchoices.length)];
+    console.log("correct: " + computerGuess)
+}
+
+function renderGame() {
+    //controlling the stats displayed on the page.
     holdsguesses.textContent = "Your guesses so far: " + userGuess;
     holdsguessleft.textContent = "Guesses left: " + guessleft;
     holdswins.textContent = "Wins: " + wins;
     holdslosses.textContent = "Losses: " + losses;
-}
+};
+
+reset();
+renderGame();
